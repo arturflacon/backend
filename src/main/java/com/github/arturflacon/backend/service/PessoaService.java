@@ -1,7 +1,10 @@
 package com.github.arturflacon.backend.service;
 
+import com.github.arturflacon.backend.exception.NaoEncontradoExcessao;
 import com.github.arturflacon.backend.model.Pessoa;
 import com.github.arturflacon.backend.repository.PessoaRepository;
+
+import jakarta.transaction.Transactional;
 
 import java.rmi.NoSuchObjectException;
 import java.util.List;
@@ -21,7 +24,9 @@ public class PessoaService {
     @Autowired
     private MessageSource messageSource;
 
+    @Transactional
     public Pessoa inserir(Pessoa pessoa) {
+        System.out.println(pessoa);
         return pessoaRepository.save(pessoa);
     }
 
@@ -44,7 +49,7 @@ public class PessoaService {
     }
 
     public Pessoa buscarPorId(Long id) {
-        return pessoaRepository.findById(id).orElseThrow(() -> new NoSuchElementException(
+        return pessoaRepository.findById(id).orElseThrow(() -> new NaoEncontradoExcessao(
                 messageSource.getMessage("pessoa.notfound", new Object[] { id }, LocaleContextHolder.getLocale())));
 
     }
